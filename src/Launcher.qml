@@ -4,25 +4,32 @@ import Quickshell.Io
 import "."
 import "./theme"
 
-PopupWindow {
+PanelWindow {
     id: launcher
-    anchors.centerIn: parent
-    width: 600
-    height: 400
+    anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+    }
     color: "transparent"
     visible: Global.launcherVisible
     
-    // Close when clicking outside
-    MouseArea {
+    // Background dim / click to close
+    Rectangle {
         anchors.fill: parent
-        z: -1
-        onClicked: Global.toggleLauncher()
+        color: "#80000000"
+        MouseArea {
+            anchors.fill: parent
+            onClicked: Global.toggleLauncher()
+        }
     }
 
     Rectangle {
-        anchors.fill: parent
+        anchors.centerIn: parent
+        width: 600
+        height: 400
         color: Theme.background
-        radius: 10
         border.color: Theme.selection
         border.width: 2
         
@@ -36,7 +43,6 @@ PopupWindow {
                 width: parent.width
                 height: 40
                 color: Theme.comment
-                radius: 5
                 
                 TextInput {
                     id: searchInput
@@ -54,6 +60,7 @@ PopupWindow {
                         opacity: 0.5
                         visible: !searchInput.text && !searchInput.activeFocus
                         verticalAlignment: TextInput.AlignVCenter
+                        font: Theme.mainFont
                     }
                 }
             }
@@ -78,7 +85,6 @@ PopupWindow {
                             width: 40
                             height: 40
                             color: Theme.blue
-                            radius: 5
                         }
                         
                         Text {

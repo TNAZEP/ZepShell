@@ -20,23 +20,15 @@ PanelWindow {
         anchors.left: parent.left
         anchors.leftMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 5
+        spacing: 10
 
         Repeater {
             model: Hyprland.workspaces
             
-            Rectangle {
-                width: 20
-                height: 20
-                color: modelData.active ? Theme.selection : Theme.comment
-                radius: 4
-                
-                Text {
-                    anchors.centerIn: parent
-                    text: modelData.id
-                    color: Theme.foreground
-                    font: Theme.mainFont
-                }
+            Text {
+                text: modelData.id
+                color: modelData.active ? Theme.red : Theme.comment
+                font: Theme.boldFont
                 
                 MouseArea {
                     anchors.fill: parent
@@ -48,7 +40,7 @@ PanelWindow {
 
     Text {
         anchors.centerIn: parent
-        text: Qt.formatDateTime(new Date(), "yyyy-MM-dd HH:mm:ss")
+        text: Qt.formatDateTime(new Date(), "ddd, MMM dd  HH:mm")
         color: Theme.foreground
         font: Theme.mainFont
         
@@ -56,7 +48,7 @@ PanelWindow {
             interval: 1000
             running: true
             repeat: true
-            onTriggered: parent.text = Qt.formatDateTime(new Date(), "yyyy-MM-dd HH:mm:ss")
+            onTriggered: parent.text = Qt.formatDateTime(new Date(), "ddd, MMM dd  HH:mm")
         }
     }
 
@@ -64,24 +56,42 @@ PanelWindow {
         anchors.right: parent.right
         anchors.rightMargin: 10
         anchors.verticalCenter: parent.verticalCenter
-        spacing: 10
+        spacing: 15
+
+        // CPU (Placeholder)
+        Text {
+            text: "cpu: 2%"
+            color: Theme.foreground
+            font: Theme.mainFont
+        }
+
+        // Volume (Placeholder)
+        Text {
+            text: "vol: 40%"
+            color: Theme.foreground
+            font: Theme.mainFont
+        }
 
         // Battery
         Text {
-            text: "BAT: " + (batteryFile.data ? batteryFile.data.trim() : "N/A") + "%"
+            id: batteryText
+            text: "bat: N/A%"
             color: Theme.foreground
             font: Theme.mainFont
             
-            File {
-                id: batteryFile
-                path: "/sys/class/power_supply/BAT0/capacity"
-                // interval: 60000 // Default is usually fine or needs a timer
+            Process {
+                id: batteryProcess
+                command: ["cat", "/sys/class/power_supply/BAT0/capacity"]
+                stdout: SplitParser {
+                    onRead: (data) => batteryText.text = "bat: " + data + "%"
+                }
             }
             Timer {
                 interval: 60000
                 running: true
                 repeat: true
-                onTriggered: batteryFile.read()
+                triggeredOnStart: true
+                onTriggered: batteryProcess.running = true
             }
         }
 
@@ -92,39 +102,49 @@ PanelWindow {
                 model: SystemTray.items
                 
                 Image {
-                    width: 20
-                    height: 20
+                    width: 16
+                    height: 16
                     source: modelData.icon
                     fillMode: Image.PreserveAspectFit
                     
+                    TrayMenu {
+                        id: trayMenu
+                        menuHandle: modelData.menu
+                    }
+                    
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: modelData.activate()
-                        onSecondaryClicked: modelData.menu.open()
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        onClicked: (mouse) => {
+                            if (mouse.button === Qt.LeftButton) {
+                                modelData.activate()
+                            } else if (mouse.button === Qt.RightButton) {
+                                var pos = parent.mapToGlobal(0, 0)
+                                trayMenu.x = pos.x
+                                trayMenu.y = pos.y + parent.height
+                                trayMenu.visible = true
+                            }
+                        }
                     }
                 }
             }
         }
 
-        
-        // Side Panel Toggle
-        Rectangle {
-            width: 20
-            height: 20
+        // Toggles (Text based)
+        Text {
+            text: "[side]"
             color: Theme.blue
-            radius: 4
+            font: Theme.mainFont
             MouseArea {
                 anchors.fill: parent
                 onClicked: Global.toggleSidePanel()
             }
         }
 
-        // Power Menu Toggle
-        Rectangle {
-            width: 20
-            height: 20
+        Text {
+            text: "[pwr]"
             color: Theme.red
-            radius: 4
+            font: Theme.mainFont
             MouseArea {
                 anchors.fill: parent
                 onClicked: Global.togglePowerMenu()

@@ -4,23 +4,34 @@ import Quickshell.Io
 import "."
 import "./theme"
 
-PopupWindow {
+PanelWindow {
     id: powerMenu
-    anchors.centerIn: parent
-    width: 600
-    height: 200
-    color: Theme.background
+    anchors {
+        top: true
+        bottom: true
+        left: true
+        right: true
+    }
+    color: "transparent"
     visible: Global.powerMenuVisible
     
-    // Close on click outside (optional, but good UX)
-    // PopupWindow usually handles this if modal, but let's add an overlay or just close on action.
-    
+    // Background dim / click to close
     Rectangle {
         anchors.fill: parent
+        color: "#80000000" // Semi-transparent black
+        MouseArea {
+            anchors.fill: parent
+            onClicked: Global.togglePowerMenu()
+        }
+    }
+    
+    Rectangle {
+        anchors.centerIn: parent
+        width: 600
+        height: 200
         color: Theme.background
         border.color: Theme.selection
         border.width: 2
-        radius: 10
         
         Row {
             anchors.centerIn: parent
@@ -39,13 +50,12 @@ PopupWindow {
                     width: 80
                     height: 80
                     color: modelData.color
-                    radius: 10
                     
                     Text {
                         anchors.centerIn: parent
                         text: modelData.label
                         color: Theme.background
-                        font: Theme.mainFont
+                        font: Theme.boldFont
                     }
                     
                     MouseArea {

@@ -1,1 +1,6 @@
 singleton Global 1.0 Global.qml
+Bar 1.0 Bar.qml
+SidePanel 1.0 SidePanel.qml
+PowerMenu 1.0 PowerMenu.qml
+Launcher 1.0 Launcher.qml
+TrayMenu 1.0 TrayMenu.qml
