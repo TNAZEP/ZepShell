@@ -4,6 +4,7 @@ import Quickshell.Io
 import Quickshell.Services.Notifications
 import "."
 import "./theme"
+import "NotificationManager.js" as NotificationManager
 
 PanelWindow {
     id: sidePanel
@@ -22,13 +23,56 @@ PanelWindow {
         bottom: 10
     }
 
-import "NotificationManager.js" as NotificationManager
+
 
     Rectangle {
         anchors.fill: parent
         color: Theme.background
         border.color: Theme.selection
         border.width: 1
+
+        NotificationServer {
+            id: notificationServer
+        }
+        
+        Connections {
+            target: notificationServer
+            
+            function onNotification(notification) {
+                console.log("SidePanel: Notification received!", notification)
+                
+                // Keep notification alive
+                notification.tracked = true
+                console.log("SidePanel: Set tracked = true")
+                
+                // Add to manager
+                NotificationManager.add(notification)
+                
+                // Add to model
+                notificationModel.append({
+                    "summary": notification.summary,
+                    "body": notification.body,
+                    "appName": notification.appName,
+                    "icon": notification.appIcon 
+                })
+                
+                // Connect to closed signal to remove from model and manager
+                notification.closed.connect(function() {
+                    console.log("SidePanel: Notification closed signal received", notification.summary)
+                    
+                    // Remove from manager
+                    var index = NotificationManager.remove(notification)
+                    
+                    if (index !== -1) {
+                        console.log("SidePanel: Removing notification from model at index", index)
+                        // Remove from model
+                        notificationModel.remove(index)
+                    } else {
+                        console.log("SidePanel: Notification not found in manager during close")
+                    }
+                })
+            }
+        }
 
         Column {
             anchors.fill: parent
@@ -81,45 +125,6 @@ import "NotificationManager.js" as NotificationManager
                 
                 model: ListModel {
                     id: notificationModel
-                }
-
-                NotificationServer {
-                    id: notificationServer
-                }
-                
-                Connections {
-                    target: notificationServer
-                    
-                    function onNotification(notification) {
-                        console.log("SidePanel: Notification received!", notification)
-                        
-                        // Add to manager
-                        NotificationManager.add(notification)
-                        
-                        // Add to model
-                        notificationModel.append({
-                            "summary": notification.summary,
-                            "body": notification.body,
-                            "appName": notification.appName,
-                            "icon": notification.appIcon 
-                        })
-                        
-                        // Connect to closed signal to remove from model and manager
-                        notification.closed.connect(function() {
-                            console.log("SidePanel: Notification closed signal received", notification.summary)
-                            
-                            // Remove from manager
-                            var index = NotificationManager.remove(notification)
-                            
-                            if (index !== -1) {
-                                console.log("SidePanel: Removing notification from model at index", index)
-                                // Remove from model
-                                notificationModel.remove(index)
-                            } else {
-                                console.log("SidePanel: Notification not found in manager during close")
-                            }
-                        })
-                    }
                 }
 
                 delegate: Rectangle {

@@ -38,7 +38,7 @@ function clearAll() {
         var notification = currentList[i];
         if (notification) {
             try {
-                console.log("NotificationManager: Dismissing", i);
+                console.log("NotificationManager: Dismissing", i, "tracked:", notification.tracked);
                 notification.dismiss();
             } catch (e) {
                 console.log("NotificationManager: Error dismissing:", e);

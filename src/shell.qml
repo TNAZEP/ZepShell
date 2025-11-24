@@ -12,6 +12,7 @@ ShellRoot {
     SidePanel { id: sidePanel }
     PowerMenu { id: powerMenu }
     Launcher { id: launcher }
+    NotificationPopup { id: notificationPopup }
 
     // Helper functions to toggle windows (if they were properties or accessible)
     // Since they are separate windows, we might need a shared state or singleton for visibility control
