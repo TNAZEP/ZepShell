@@ -58,40 +58,100 @@ PanelWindow {
         anchors.verticalCenter: parent.verticalCenter
         spacing: 15
 
-        // CPU (Placeholder)
+        // CPU
         Text {
-            text: "cpu: 2%"
+            id: cpuText
+            text: "cpu: 0%"
             color: Theme.foreground
             font: Theme.mainFont
+
+            property var lastTotal: 0
+            property var lastIdle: 0
+
+            Process {
+                id: cpuProcess
+                command: ["cat", "/proc/stat"]
+                stdout: SplitParser {
+                    onRead: (data) => {
+                        // data is the whole file content usually if cat finishes, or chunks. 
+                        // SplitParser by default splits by lines? No, it splits by delimiter, default newline?
+                        // Let's assume we get lines or we handle the first line.
+                        // Actually, SplitParser might be tricky if we don't know the default behavior.
+                        // But looking at the battery example: `stdout: SplitParser { onRead: ... }`
+                        // It likely emits lines.
+                        
+                        if (data.startsWith("cpu ")) {
+                            var parts = data.split(/\s+/)
+                            // parts[0] = "cpu"
+                            // parts[1] = user
+                            // parts[2] = nice
+                            // parts[3] = system
+                            // parts[4] = idle
+                            
+                            var user = parseInt(parts[1])
+                            var nice = parseInt(parts[2])
+                            var system = parseInt(parts[3])
+                            var idle = parseInt(parts[4])
+                            var iowait = parseInt(parts[5])
+                            var irq = parseInt(parts[6])
+                            var softirq = parseInt(parts[7])
+                            
+                            var total = user + nice + system + idle + iowait + irq + softirq
+                            
+                            var totalDelta = total - cpuText.lastTotal
+                            var idleDelta = idle - cpuText.lastIdle
+                            
+                            if (cpuText.lastTotal !== 0) {
+                                var usage = 1.0 - (idleDelta / totalDelta)
+                                cpuText.text = "cpu: " + Math.round(usage * 100) + "%"
+                            }
+                            
+                            cpuText.lastTotal = total
+                            cpuText.lastIdle = idle
+                        }
+                    }
+                }
+            }
+            
+            Timer {
+                interval: 500
+                running: true
+                repeat: true
+                triggeredOnStart: true
+                onTriggered: cpuProcess.running = true
+            }
         }
 
-        // Volume (Placeholder)
+        // Volume
         Text {
-            text: "vol: 40%"
-            color: Theme.foreground
-            font: Theme.mainFont
-        }
-
-        // Battery
-        Text {
-            id: batteryText
-            text: "bat: N/A%"
+            id: volText
+            text: "vol: --%"
             color: Theme.foreground
             font: Theme.mainFont
             
             Process {
-                id: batteryProcess
-                command: ["cat", "/sys/class/power_supply/BAT0/capacity"]
+                id: volProcess
+                command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
                 stdout: SplitParser {
-                    onRead: (data) => batteryText.text = "bat: " + data + "%"
+                    onRead: (data) => {
+                        // Output: "Volume: 0.40" or "Volume: 0.40 [MUTED]"
+                        var parts = data.split(" ")
+                        if (parts.length >= 2 && parts[0] === "Volume:") {
+                            var vol = parseFloat(parts[1])
+                            var percent = Math.round(vol * 100)
+                            var muted = data.includes("[MUTED]")
+                            volText.text = "vol: " + percent + "%" + (muted ? " (M)" : "")
+                        }
+                    }
                 }
             }
+            
             Timer {
-                interval: 60000
+                interval: 500
                 running: true
                 repeat: true
                 triggeredOnStart: true
-                onTriggered: batteryProcess.running = true
+                onTriggered: volProcess.running = true
             }
         }
 
