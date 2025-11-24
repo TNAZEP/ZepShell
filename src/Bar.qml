@@ -73,12 +73,6 @@ PanelWindow {
                 command: ["cat", "/proc/stat"]
                 stdout: SplitParser {
                     onRead: (data) => {
-                        // data is the whole file content usually if cat finishes, or chunks. 
-                        // SplitParser by default splits by lines? No, it splits by delimiter, default newline?
-                        // Let's assume we get lines or we handle the first line.
-                        // Actually, SplitParser might be tricky if we don't know the default behavior.
-                        // But looking at the battery example: `stdout: SplitParser { onRead: ... }`
-                        // It likely emits lines.
                         
                         if (data.startsWith("cpu ")) {
                             var parts = data.split(/\s+/)
