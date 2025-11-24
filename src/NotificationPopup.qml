@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
+import Quickshell.Widgets
 import "."
 import "./theme"
 
@@ -12,7 +13,7 @@ PanelWindow {
         right: true
     }
     width: 300
-    height: content.height + 20
+    implicitHeight: content.height + 20
     color: "transparent"
     visible: false // Hidden by default
     
@@ -66,7 +67,16 @@ PanelWindow {
                     width: 24
                     height: 24
                     color: "transparent"
-                    // Image { source: popupWindow.currentNotification ? popupWindow.currentNotification.appIcon : "" ... }
+                    IconImage {
+                        anchors.fill: parent
+                        source: {
+                            var iconStr = popupWindow.currentNotification ? popupWindow.currentNotification.appIcon : ""
+                            if (iconStr && iconStr.toString().indexOf("/") === 0) {
+                                return "file://" + iconStr
+                            }
+                            return iconStr || ""
+                        }
+                    }
                 }
                 
                 Text {

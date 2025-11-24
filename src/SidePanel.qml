@@ -2,6 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Notifications
+import Quickshell.Widgets
 import "."
 import "./theme"
 import "NotificationManager.js" as NotificationManager
@@ -147,7 +148,16 @@ PanelWindow {
                                 width: 24
                                 height: 24
                                 color: "transparent"
-                                // Image { source: model.icon ... }
+                                IconImage {
+                                    anchors.fill: parent
+                                    source: {
+                                        var iconStr = model.icon || ""
+                                        if (iconStr.toString().indexOf("/") === 0) {
+                                            return "file://" + iconStr
+                                        }
+                                        return iconStr
+                                    }
+                                }
                             }
                             
                             Text {

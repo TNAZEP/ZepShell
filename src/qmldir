@@ -4,3 +4,4 @@ SidePanel 1.0 SidePanel.qml
 PowerMenu 1.0 PowerMenu.qml
 Launcher 1.0 Launcher.qml
 TrayMenu 1.0 TrayMenu.qml
+NotificationPopup 1.0 NotificationPopup.qml
