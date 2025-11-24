@@ -7,14 +7,19 @@
     quickshell.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, quickshell }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      quickshell,
+    }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
     in
     {
       packages.${system}.default = pkgs.writeShellScriptBin "zepshell" ''
-        ${quickshell.packages.${system}.quickshell}/bin/quickshell ${./src}
+        ${quickshell.packages.${system}.quickshell}/bin/quickshell --path ${./src}
       '';
 
       devShells.${system}.default = pkgs.mkShell {
