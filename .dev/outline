@@ -1,0 +1,13 @@
+Quickshell based shell for use on Hyprland, packaged as a nix flake for easy install on NixOS
+The entire shell is designed around the kanagawa-dragon colour scheme, all colours used are from this scheme.
+
+
+Top bar left: hyprland workspaces
+Top bar middle: date and time in ISO format
+Top bar right: cpu usage, memory usage, battery percentage (if on a laptop), volume, system tray, side panel button and power menu button.
+
+Side panel: contains buttons for quick setting switches like wifi, bluetooth and screen brightness (only show on laptops), screenshot button, audio mixer and colour picker button. Also contains a notification list.
+
+Power menu: contains options to lock screen, logout, reboot, shutdown and suspend.
+
+Run menu: contains options to run applications. Opened by keyboard shortcut. Commonly ran programs have priority in listing. Inspired by rofi drun.
