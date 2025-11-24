@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import Quickshell.Services.Notifications
 import "."
 import "./theme"
 
@@ -12,7 +13,7 @@ PanelWindow {
         bottom: true
     }
     width: 350
-    color: "transparent" // Use inner rectangle for background
+    color: "transparent"
     visible: Global.sidePanelVisible
     
     margins {
@@ -20,6 +21,8 @@ PanelWindow {
         right: 10
         bottom: 10
     }
+
+import "NotificationManager.js" as NotificationManager
 
     Rectangle {
         anchors.fill: parent
@@ -32,121 +35,144 @@ PanelWindow {
             anchors.margins: 20
             spacing: 20
             
-            Text {
-                text: "Quick Settings"
-                color: Theme.foreground
-                font: Theme.boldFont
-            }
-            
-            // Toggles Row
-            Row {
-                spacing: 15
-                Repeater {
-                    model: ["Wifi", "BT", "DND"]
-                    Rectangle {
-                        width: 90
-                        height: 50
-                        color: Theme.selection
-                        
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData
-                            color: Theme.foreground
-                            font: Theme.mainFont
-                        }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: console.log("Toggle " + modelData)
-                        }
-                    }
-                }
-            }
-            
-            // Sliders (Placeholder)
-            Column {
-                spacing: 10
+            Item {
                 width: parent.width
+                height: 30
                 
-                Text { text: "Volume"; color: Theme.foreground; font: Theme.mainFont }
-                Rectangle {
-                    width: parent.width
-                    height: 4
-                    color: Theme.comment
-                    Rectangle {
-                        width: parent.width * 0.5
-                        height: parent.height
-                        color: Theme.blue
-                    }
+                Text {
+                    text: "Notifications"
+                    color: Theme.foreground
+                    font: Theme.boldFont
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.left: parent.left
                 }
                 
-                Text { text: "Brightness"; color: Theme.foreground; font: Theme.mainFont }
+                // Clear All Button
                 Rectangle {
-                    width: parent.width
-                    height: 4
-                    color: Theme.comment
-                    Rectangle {
-                        width: parent.width * 0.7
-                        height: parent.height
-                        color: Theme.yellow
-                    }
-                }
-            }
-            
-            // Tools Row
-            Row {
-                spacing: 15
-                Repeater {
-                    model: ["Screen", "Mixer", "Color"]
-                    Rectangle {
-                        width: 90
-                        height: 50
-                        color: Theme.comment
-                        
-                        Text {
-                            anchors.centerIn: parent
-                            text: modelData
-                            color: Theme.foreground
-                            font: Theme.mainFont
-                        }
-                    }
-                }
-            }
-            
-            // Notifications
-            Rectangle {
-                width: parent.width
-                height: 1
-                color: Theme.comment
-            }
-            
-            Text {
-                text: "Notifications"
-                color: Theme.foreground
-                font: Theme.boldFont
-            }
-            
-            ListView {
-                width: parent.width
-                height: 200
-                clip: true
-                model: 5
-                delegate: Rectangle {
-                    width: parent.width
-                    height: 60
-                    color: "transparent"
-                    
-                    Rectangle {
-                        anchors.bottom: parent.bottom
-                        width: parent.width
-                        height: 1
-                        color: Theme.comment
-                    }
+                    width: 80
+                    height: 30
+                    color: Theme.selection
+                    radius: 4
+                    anchors.right: parent.right
+                    anchors.verticalCenter: parent.verticalCenter
                     
                     Text {
                         anchors.centerIn: parent
-                        text: "Notification " + index
+                        text: "Clear All"
                         color: Theme.foreground
                         font: Theme.mainFont
+                    }
+                    
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            NotificationManager.clearAll()
+                        }
+                    }
+                }
+            }
+            
+            ListView {
+                id: notificationList
+                width: parent.width
+                height: parent.height - 60
+                clip: true
+                spacing: 10
+                
+                model: ListModel {
+                    id: notificationModel
+                }
+
+                NotificationServer {
+                    id: notificationServer
+                }
+                
+                Connections {
+                    target: notificationServer
+                    
+                    function onNotification(notification) {
+                        console.log("SidePanel: Notification received!", notification)
+                        
+                        // Add to manager
+                        NotificationManager.add(notification)
+                        
+                        // Add to model
+                        notificationModel.append({
+                            "summary": notification.summary,
+                            "body": notification.body,
+                            "appName": notification.appName,
+                            "icon": notification.appIcon 
+                        })
+                        
+                        // Connect to closed signal to remove from model and manager
+                        notification.closed.connect(function() {
+                            console.log("SidePanel: Notification closed signal received", notification.summary)
+                            
+                            // Remove from manager
+                            var index = NotificationManager.remove(notification)
+                            
+                            if (index !== -1) {
+                                console.log("SidePanel: Removing notification from model at index", index)
+                                // Remove from model
+                                notificationModel.remove(index)
+                            } else {
+                                console.log("SidePanel: Notification not found in manager during close")
+                            }
+                        })
+                    }
+                }
+
+                delegate: Rectangle {
+                    width: parent.width
+                    height: contentColumn.height + 20
+                    color: Theme.comment
+                    radius: 4
+                    
+                    Column {
+                        id: contentColumn
+                        anchors.centerIn: parent
+                        width: parent.width - 20
+                        spacing: 5
+                        
+                        Row {
+                            width: parent.width
+                            spacing: 10
+                            
+                            Rectangle {
+                                width: 24
+                                height: 24
+                                color: "transparent"
+                                // Image { source: model.icon ... }
+                            }
+                            
+                            Text {
+                                text: model.summary || "No Title"
+                                color: Theme.foreground
+                                font: Theme.boldFont
+                                elide: Text.ElideRight
+                                width: parent.width - 40
+                            }
+                        }
+                        
+                        Text {
+                            text: model.body || ""
+                            color: Theme.foreground
+                            font: Theme.mainFont
+                            wrapMode: Text.Wrap
+                            width: parent.width
+                            visible: text !== ""
+                        }
+                    }
+                    
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            // Close the notification object using index
+                            var notification = NotificationManager.get(index)
+                            if (notification) {
+                                notification.dismiss()
+                            }
+                        }
                     }
                 }
             }
