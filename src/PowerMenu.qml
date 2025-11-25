@@ -27,15 +27,17 @@ PanelWindow {
     
     Rectangle {
         anchors.centerIn: parent
-        width: 600
-        height: 200
+        width: row.implicitWidth + 60
+        height: 100
         color: Theme.background
-        border.color: Theme.selection
-        border.width: 2
+        border.color: Theme.foreground
+        border.width: Theme.borderWidth
+        radius: Theme.cornerRadius
         
         Row {
+            id: row
             anchors.centerIn: parent
-            spacing: 20
+            spacing: 30
             
             Repeater {
                 model: [
@@ -47,19 +49,22 @@ PanelWindow {
                 ]
                 
                 Rectangle {
-                    width: 80
-                    height: 80
-                    color: modelData.color
+                    width: btnText.width + 20
+                    height: 40
+                    color: "transparent"
                     
                     Text {
+                        id: btnText
                         anchors.centerIn: parent
-                        text: modelData.label
-                        color: Theme.background
+                        text: "[ " + modelData.label + " ]"
+                        color: parent.activeFocus || area.containsMouse ? modelData.color : Theme.foreground
                         font: Theme.boldFont
                     }
                     
                     MouseArea {
+                        id: area
                         anchors.fill: parent
+                        hoverEnabled: true
                         onClicked: {
                             var proc = Qt.createQmlObject(`
                                 import Quickshell.Io

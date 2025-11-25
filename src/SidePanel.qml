@@ -29,8 +29,9 @@ PanelWindow {
     Rectangle {
         anchors.fill: parent
         color: Theme.background
-        border.color: Theme.selection
-        border.width: 1
+        border.color: Theme.borderColor
+        border.width: Theme.borderWidth
+        radius: Theme.cornerRadius
 
         NotificationServer {
             id: notificationServer
@@ -94,22 +95,23 @@ PanelWindow {
                 
                 // Clear All Button
                 Rectangle {
-                    width: 80
+                    width: 120
                     height: 30
-                    color: Theme.selection
-                    radius: 4
+                    color: "transparent"
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     
                     Text {
                         anchors.centerIn: parent
-                        text: "Clear All"
-                        color: Theme.foreground
+                        text: "[ Clear All ]"
+                        color: clearMouse.containsMouse ? Theme.red : Theme.foreground
                         font: Theme.mainFont
                     }
                     
                     MouseArea {
+                        id: clearMouse
                         anchors.fill: parent
+                        hoverEnabled: true
                         onClicked: {
                             NotificationManager.clearAll()
                         }
@@ -131,8 +133,10 @@ PanelWindow {
                 delegate: Rectangle {
                     width: parent.width
                     height: contentColumn.height + 20
-                    color: Theme.comment
-                    radius: 4
+                    color: Theme.background
+                    border.width: Theme.borderWidth
+                    border.color: Theme.accentColor
+                    radius: Theme.cornerRadius
                     
                     Column {
                         id: contentColumn

@@ -49,9 +49,9 @@ PanelWindow {
         width: parent.width
         height: column.height + 20
         color: Theme.background
-        border.color: Theme.selection
-        border.width: 1
-        radius: 4
+        border.color: Theme.accentColor
+        border.width: Theme.borderWidth
+        radius: Theme.cornerRadius
         
         Column {
             id: column

@@ -30,37 +30,47 @@ PanelWindow {
         width: 600
         height: 400
         color: Theme.background
-        border.color: Theme.selection
-        border.width: 2
+        border.color: Theme.foreground
+        border.width: Theme.borderWidth
+        radius: Theme.cornerRadius
         
         Column {
             anchors.fill: parent
             anchors.margins: 20
-            spacing: 20
+            spacing: 10
             
             // Search Bar
             Rectangle {
                 width: parent.width
                 height: 40
-                color: Theme.comment
+                color: "transparent"
                 
-                TextInput {
-                    id: searchInput
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    width: parent.width
+                    height: 1
+                    color: Theme.bgAlt
+                }
+                
+                Row {
                     anchors.fill: parent
-                    anchors.margins: 10
-                    color: Theme.background
-                    font: Theme.mainFont
-                    verticalAlignment: TextInput.AlignVCenter
-                    focus: true
+                    spacing: 10
                     
                     Text {
-                        anchors.fill: parent
-                        text: "Search..."
-                        color: Theme.background
-                        opacity: 0.5
-                        visible: !searchInput.text && !searchInput.activeFocus
-                        verticalAlignment: TextInput.AlignVCenter
+                        anchors.verticalCenter: parent.verticalCenter
+                        text: "search: "
+                        color: Theme.accentColor
+                        font: Theme.boldFont
+                    }
+
+                    TextInput {
+                        id: searchInput
+                        anchors.verticalCenter: parent.verticalCenter
+                        width: parent.width - parent.spacing - 80
+                        color: Theme.foreground
                         font: Theme.mainFont
+                        verticalAlignment: TextInput.AlignVCenter
+                        focus: true
                     }
                 }
             }
@@ -73,33 +83,22 @@ PanelWindow {
                 model: 10 // Placeholder
                 delegate: Rectangle {
                     width: parent.width
-                    height: 50
+                    height: 40
                     color: "transparent"
                     
-                    Row {
-                        anchors.fill: parent
-                        anchors.margins: 5
-                        spacing: 10
-                        
-                        Rectangle {
-                            width: 40
-                            height: 40
-                            color: Theme.blue
-                        }
-                        
-                        Text {
-                            anchors.verticalCenter: parent.verticalCenter
-                            text: "Application " + index
-                            color: Theme.foreground
-                            font: Theme.mainFont
-                        }
+                    Text {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 5
+                        text: "Application " + index
+                        color: parent.activeFocus || area.containsMouse ? Theme.accentColor : Theme.foreground
+                        font: Theme.mainFont
                     }
                     
                     MouseArea {
+                        id: area
                         anchors.fill: parent
                         hoverEnabled: true
-                        onEntered: parent.color = Theme.selection
-                        onExited: parent.color = "transparent"
                         onClicked: {
                             console.log("Launch App " + index)
                             Global.toggleLauncher()
