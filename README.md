@@ -15,7 +15,7 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 
 -   Widgets: [`Quickshell`](https://quickshell.outfoxxed.me)
 -   Window manager: [`Hyprland`](https://hyprland.org)
--   Dots: [`caelestia`](https://github.com/caelestia-dots)
+-   Dots: [`shin-nix`](https://github.com/TNAZEP/shin-nix)
 
 > [!NOTE]
 > This repo is a fork of [`Caelestia Shell`](https://github.com/caelestia-dots/shell)
