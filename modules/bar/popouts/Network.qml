@@ -101,8 +101,11 @@ ColumnLayout {
                 implicitWidth: implicitHeight
                 implicitHeight: connectIcon.implicitHeight + Appearance.padding.small
 
-                radius: Appearance.rounding.full
+                // Minimal flat styling
+                radius: Appearance.rounding.small
                 color: Qt.alpha(Colours.palette.m3primary, networkItem.modelData.active ? 1 : 0)
+                border.width: networkItem.modelData.active ? 0 : 1
+                border.color: Colours.palette.m3outline
 
                 CircularIndicator {
                     anchors.fill: parent
@@ -146,11 +149,14 @@ ColumnLayout {
         Layout.fillWidth: true
         implicitHeight: rescanBtn.implicitHeight + Appearance.padding.small * 2
 
-        radius: Appearance.rounding.full
-        color: Colours.palette.m3primaryContainer
+        // Minimal flat styling
+        radius: Appearance.rounding.small
+        color: Colours.palette.m3surfaceContainer
+        border.width: 2
+        border.color: Colours.palette.m3primary
 
         StateLayer {
-            color: Colours.palette.m3onPrimaryContainer
+            color: Colours.palette.m3primary
             disabled: Network.scanning || !Network.wifiEnabled
 
             function onClicked(): void {
@@ -170,12 +176,12 @@ ColumnLayout {
 
                 animate: true
                 text: "wifi_find"
-                color: Colours.palette.m3onPrimaryContainer
+                color: Colours.palette.m3primary
             }
 
             StyledText {
                 text: qsTr("Rescan networks")
-                color: Colours.palette.m3onPrimaryContainer
+                color: Colours.palette.m3onSurface
             }
 
             Behavior on opacity {

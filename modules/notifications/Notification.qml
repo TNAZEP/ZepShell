@@ -20,8 +20,11 @@ StyledRect {
     readonly property int nonAnimHeight: summary.implicitHeight + (root.expanded ? appName.height + body.height + actions.height + actions.anchors.topMargin : bodyPreview.height) + inner.anchors.margins * 2
     property bool expanded
 
-    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.normal
+    // Minimal flat styling with border
+    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3errorContainer : Colours.palette.m3surfaceContainer
+    radius: Appearance.rounding.small
+    border.width: 2
+    border.color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : Colours.palette.m3outline
     implicitWidth: Config.notifs.sizes.width
     implicitHeight: inner.implicitHeight
 
@@ -117,7 +120,8 @@ StyledRect {
                 visible: root.hasImage || root.hasAppIcon
 
                 sourceComponent: ClippingRectangle {
-                    radius: Appearance.rounding.full
+                    // Minimal flat styling
+                    radius: Appearance.rounding.small
                     implicitWidth: Config.notifs.sizes.image
                     implicitHeight: Config.notifs.sizes.image
 
@@ -143,8 +147,9 @@ StyledRect {
                 anchors.bottom: root.hasImage ? image.bottom : undefined
 
                 sourceComponent: StyledRect {
-                    radius: Appearance.rounding.full
-                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.layer(Colours.palette.m3surfaceContainerHighest, 2) : Colours.palette.m3secondaryContainer
+                    // Minimal flat styling
+                    radius: Appearance.rounding.small
+                    color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : root.modelData.urgency === NotificationUrgency.Low ? Colours.palette.m3surfaceContainerHighest : Colours.palette.m3primary
                     implicitWidth: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
                     implicitHeight: root.hasImage ? Config.notifs.sizes.badge : Config.notifs.sizes.image
 
@@ -442,8 +447,11 @@ StyledRect {
 
         required property var modelData
 
-        radius: Appearance.rounding.full
-        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3secondary : Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+        // Minimal flat action button styling
+        radius: Appearance.rounding.small
+        color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : Colours.palette.m3surfaceContainerHigh
+        border.width: 1
+        border.color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3error : Colours.palette.m3outline
 
         Layout.preferredWidth: actionText.width + Appearance.padding.normal * 2
         Layout.preferredHeight: actionText.height + Appearance.padding.small * 2
@@ -451,8 +459,8 @@ StyledRect {
         implicitHeight: actionText.height + Appearance.padding.small * 2
 
         StateLayer {
-            radius: Appearance.rounding.full
-            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onSecondary : Colours.palette.m3onSurface
+            radius: Appearance.rounding.small
+            color: root.modelData.urgency === NotificationUrgency.Critical ? Colours.palette.m3onError : Colours.palette.m3onSurface
 
             function onClicked(): void {
                 action.modelData.invoke();

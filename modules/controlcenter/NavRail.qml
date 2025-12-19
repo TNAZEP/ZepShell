@@ -91,13 +91,16 @@ Item {
                 implicitWidth: nonAnimWidth
                 implicitHeight: root.session.navExpanded ? normalWinIcon.implicitHeight + Appearance.padding.normal * 2 : nonAnimWidth
 
-                color: Colours.palette.m3primaryContainer
+                // Minimal flat styling
+                color: Colours.palette.m3surfaceContainer
                 radius: Appearance.rounding.small
+                border.width: 2
+                border.color: Colours.palette.m3primary
 
                 StateLayer {
                     id: normalWinState
 
-                    color: Colours.palette.m3onPrimaryContainer
+                    color: Colours.palette.m3primary
 
                     function onClicked(): void {
                         root.session.root.close();
@@ -117,7 +120,7 @@ Item {
                     anchors.leftMargin: Appearance.padding.large
 
                     text: "select_window"
-                    color: Colours.palette.m3onPrimaryContainer
+                    color: Colours.palette.m3primary
                     font.pointSize: Appearance.font.size.large
                     fill: 1
                 }
@@ -130,7 +133,7 @@ Item {
                     anchors.leftMargin: Appearance.spacing.normal
 
                     text: qsTr("Float window")
-                    color: Colours.palette.m3onPrimaryContainer
+                    color: Colours.palette.m3onSurface
                     opacity: root.session.navExpanded ? 1 : 0
 
                     Behavior on opacity {
@@ -212,14 +215,17 @@ Item {
         StyledRect {
             id: background
 
-            radius: Appearance.rounding.full
-            color: Qt.alpha(Colours.palette.m3secondaryContainer, item.active ? 1 : 0)
+            // Minimal flat styling
+            radius: Appearance.rounding.small
+            color: Qt.alpha(Colours.palette.m3primary, item.active ? 0.15 : 0)
+            border.width: item.active ? 2 : 0
+            border.color: Colours.palette.m3primary
 
             implicitWidth: icon.implicitWidth + icon.anchors.leftMargin * 2
             implicitHeight: icon.implicitHeight + Appearance.padding.small
 
             StateLayer {
-                color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                color: item.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
 
                 function onClicked(): void {
                     root.session.active = item.label;
@@ -234,7 +240,7 @@ Item {
                 anchors.leftMargin: Appearance.padding.large
 
                 text: item.icon
-                color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                color: item.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
                 font.pointSize: Appearance.font.size.large
                 fill: item.active ? 1 : 0
 
@@ -252,7 +258,7 @@ Item {
 
                 opacity: 0
                 text: item.label
-                color: item.active ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+                color: item.active ? Colours.palette.m3primary : Colours.palette.m3onSurface
                 font.capitalization: Font.Capitalize
             }
 

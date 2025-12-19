@@ -15,17 +15,18 @@ RadioButton {
     indicator: Rectangle {
         id: outerCircle
 
-        implicitWidth: 20
-        implicitHeight: 20
-        radius: Appearance.rounding.full
-        color: "transparent"
-        border.color: root.checked ? Colours.palette.m3primary : Colours.palette.m3onSurfaceVariant
+        implicitWidth: 18
+        implicitHeight: 18
+        // Minimal flat styling - square radio buttons
+        radius: Appearance.rounding.small
+        color: root.checked ? Qt.alpha(Colours.palette.m3primary, 0.15) : "transparent"
+        border.color: root.checked ? Colours.palette.m3primary : Colours.palette.m3outline
         border.width: 2
         anchors.verticalCenter: parent.verticalCenter
 
         StateLayer {
             anchors.margins: -Appearance.padding.smaller
-            color: root.checked ? Colours.palette.m3onSurface : Colours.palette.m3primary
+            color: root.checked ? Colours.palette.m3primary : Colours.palette.m3onSurface
             z: -1
 
             function onClicked(): void {
@@ -38,7 +39,8 @@ RadioButton {
             implicitWidth: 8
             implicitHeight: 8
 
-            radius: Appearance.rounding.full
+            // Minimal flat inner indicator
+            radius: Appearance.rounding.small
             color: Qt.alpha(Colours.palette.m3primary, root.checked ? 1 : 0)
         }
 

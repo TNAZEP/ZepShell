@@ -27,8 +27,11 @@ StyledClippingRect {
     implicitWidth: Config.bar.sizes.innerWidth
     implicitHeight: layout.implicitHeight + Appearance.padding.small * 2
 
-    color: Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.full
+    // Minimal flat styling with border
+    color: Colours.palette.m3surface
+    radius: Appearance.rounding.small
+    border.width: 2
+    border.color: Colours.palette.m3outline
 
     Item {
         anchors.fill: parent

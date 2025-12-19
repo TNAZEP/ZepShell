@@ -18,7 +18,8 @@ Item {
     anchors.right: parent?.right
 
     StateLayer {
-        radius: Appearance.rounding.normal
+        // Minimal flat styling
+        radius: Appearance.rounding.small
 
         function onClicked(): void {
             Apps.launch(root.modelData);

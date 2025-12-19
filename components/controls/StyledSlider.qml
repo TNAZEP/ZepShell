@@ -18,9 +18,10 @@ Slider {
             implicitWidth: root.handle.x - root.implicitHeight / 6
 
             color: Colours.palette.m3primary
-            radius: Appearance.rounding.full
-            topRightRadius: root.implicitHeight / 15
-            bottomRightRadius: root.implicitHeight / 15
+            // Minimal flat styling
+            radius: Appearance.rounding.small
+            topRightRadius: 0
+            bottomRightRadius: 0
         }
 
         StyledRect {
@@ -32,10 +33,13 @@ Slider {
 
             implicitWidth: parent.width - root.handle.x - root.handle.implicitWidth - root.implicitHeight / 6
 
-            color: Colours.tPalette.m3surfaceContainer
-            radius: Appearance.rounding.full
-            topLeftRadius: root.implicitHeight / 15
-            bottomLeftRadius: root.implicitHeight / 15
+            // Minimal flat styling
+            color: Colours.palette.m3surfaceContainer
+            radius: Appearance.rounding.small
+            topLeftRadius: 0
+            bottomLeftRadius: 0
+            border.width: 1
+            border.color: Colours.palette.m3outline
         }
     }
 
@@ -45,8 +49,11 @@ Slider {
         implicitWidth: root.implicitHeight / 4.5
         implicitHeight: root.implicitHeight
 
+        // Minimal flat styling
         color: Colours.palette.m3primary
-        radius: Appearance.rounding.full
+        radius: Appearance.rounding.small
+        border.width: 2
+        border.color: Colours.palette.m3onSurface
 
         MouseArea {
             anchors.fill: parent

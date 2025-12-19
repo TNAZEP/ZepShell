@@ -85,8 +85,11 @@ Column {
         implicitWidth: Config.session.sizes.button
         implicitHeight: Config.session.sizes.button
 
-        radius: Appearance.rounding.large
-        color: button.activeFocus ? Colours.palette.m3secondaryContainer : Colours.tPalette.m3surfaceContainer
+        // Minimal flat styling with border
+        radius: Appearance.rounding.small
+        color: button.activeFocus ? Qt.alpha(Colours.palette.m3primary, 0.15) : Colours.palette.m3surfaceContainer
+        border.width: 2
+        border.color: button.activeFocus ? Colours.palette.m3primary : Colours.palette.m3outline
 
         Keys.onEnterPressed: Quickshell.execDetached(button.command)
         Keys.onReturnPressed: Quickshell.execDetached(button.command)
@@ -116,7 +119,7 @@ Column {
 
         StateLayer {
             radius: parent.radius
-            color: button.activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+            color: button.activeFocus ? Colours.palette.m3primary : Colours.palette.m3onSurface
 
             function onClicked(): void {
                 Quickshell.execDetached(button.command);
@@ -127,7 +130,7 @@ Column {
             anchors.centerIn: parent
 
             text: button.icon
-            color: button.activeFocus ? Colours.palette.m3onSecondaryContainer : Colours.palette.m3onSurface
+            color: button.activeFocus ? Colours.palette.m3primary : Colours.palette.m3onSurface
             font.pointSize: Appearance.font.size.extraLarge
             font.weight: 500
         }

@@ -11,7 +11,8 @@ Item {
 
     required property var bar
     required property Brightness.Monitor monitor
-    property color colour: Colours.palette.m3primary
+    // Use foreground color for active window text
+    property color colour: Colours.palette.m3onSurface
 
     readonly property int maxHeight: {
         const otherModules = bar.children.filter(c => c.id && c.item !== this && c.id !== "spacer");

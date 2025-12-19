@@ -15,8 +15,11 @@ Slider {
     orientation: Qt.Vertical
 
     background: StyledRect {
-        color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        // Minimal flat styling
+        color: Colours.palette.m3surfaceContainer
+        radius: Appearance.rounding.small
+        border.width: 2
+        border.color: Colours.palette.m3outline
 
         StyledRect {
             anchors.left: parent.left
@@ -25,7 +28,7 @@ Slider {
             y: root.handle.y
             implicitHeight: parent.height - y
 
-            color: Colours.palette.m3secondary
+            color: Colours.palette.m3primary
             radius: parent.radius
         }
     }
@@ -50,8 +53,11 @@ Slider {
 
             anchors.fill: parent
 
-            color: Colours.palette.m3inverseSurface
-            radius: Appearance.rounding.full
+            // Minimal flat styling for handle
+            color: Colours.palette.m3primary
+            radius: Appearance.rounding.small
+            border.width: 2
+            border.color: Colours.palette.m3onSurface
 
             MouseArea {
                 id: handleInteraction
@@ -75,7 +81,7 @@ Slider {
                 }
 
                 text: root.icon
-                color: Colours.palette.m3inverseOnSurface
+                color: Colours.palette.m3onPrimary
                 anchors.centerIn: parent
 
                 onMovingChanged: anim.restart()

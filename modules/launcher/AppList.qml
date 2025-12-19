@@ -32,9 +32,12 @@ StyledListView {
 
     highlightFollowsCurrentItem: false
     highlight: StyledRect {
-        radius: Appearance.rounding.normal
-        color: Colours.palette.m3onSurface
-        opacity: 0.08
+        // Minimal flat highlight styling
+        radius: Appearance.rounding.small
+        color: Colours.palette.m3primary
+        opacity: 0.15
+        border.width: 2
+        border.color: Colours.palette.m3primary
 
         y: root.currentItem?.y ?? 0
         implicitWidth: root.width

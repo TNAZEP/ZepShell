@@ -22,8 +22,11 @@ Row {
         implicitWidth: info.implicitHeight
         implicitHeight: info.implicitHeight
 
-        radius: Appearance.rounding.large
-        color: Colours.layer(Colours.palette.m3surfaceContainerHigh, 2)
+        // Minimal flat styling
+        radius: Appearance.rounding.small
+        color: Colours.palette.m3surfaceContainerHigh
+        border.width: 2
+        border.color: Colours.palette.m3outline
 
         MaterialIcon {
             anchors.centerIn: parent
@@ -64,7 +67,8 @@ Row {
                 implicitWidth: selectIcon.implicitHeight + Appearance.padding.small * 2
                 implicitHeight: selectIcon.implicitHeight + Appearance.padding.small * 2
 
-                radius: Appearance.rounding.normal
+                // Minimal flat styling
+                radius: Appearance.rounding.small
                 color: Colours.palette.m3primary
                 scale: parent.containsMouse ? 1 : 0.5
                 opacity: parent.containsMouse ? 1 : 0

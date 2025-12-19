@@ -111,11 +111,14 @@ Item {
             implicitWidth: expandBtn.implicitWidth + Appearance.padding.normal * 2
             implicitHeight: expandBtn.implicitHeight + Appearance.padding.small
 
-            radius: Appearance.rounding.normal
-            color: Colours.palette.m3primaryContainer
+            // Minimal flat styling
+            radius: Appearance.rounding.small
+            color: Colours.palette.m3surfaceContainer
+            border.width: 2
+            border.color: Colours.palette.m3primary
 
             StateLayer {
-                color: Colours.palette.m3onPrimaryContainer
+                color: Colours.palette.m3primary
 
                 function onClicked(): void {
                     root.wrapper.hasCurrent = false;
@@ -132,12 +135,12 @@ Item {
                 StyledText {
                     Layout.leftMargin: Appearance.padding.smaller
                     text: qsTr("Open settings")
-                    color: Colours.palette.m3onPrimaryContainer
+                    color: Colours.palette.m3onSurface
                 }
 
                 MaterialIcon {
                     text: "chevron_right"
-                    color: Colours.palette.m3onPrimaryContainer
+                    color: Colours.palette.m3primary
                     font.pointSize: Appearance.font.size.large
                 }
             }

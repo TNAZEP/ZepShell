@@ -13,11 +13,15 @@ import QtQuick.Layouts
 StyledRect {
     id: root
 
-    property color colour: Colours.palette.m3secondary
+    // Use accent color for status icons
+    property color colour: Colours.palette.m3primary
     readonly property alias items: iconColumn
 
-    color: Colours.tPalette.m3surfaceContainer
-    radius: Appearance.rounding.full
+    // Minimal flat styling with border
+    color: Colours.palette.m3surface
+    radius: Appearance.rounding.small
+    border.width: 2
+    border.color: Colours.palette.m3outline
 
     clip: true
     implicitWidth: Config.bar.sizes.innerWidth

@@ -88,7 +88,10 @@ GridLayout {
     }
 
     component Rect: StyledRect {
+        // Minimal flat styling with border
         radius: Appearance.rounding.small
-        color: Colours.tPalette.m3surfaceContainer
+        color: Colours.palette.m3surfaceContainer
+        border.width: 2
+        border.color: Colours.palette.m3outline
     }
 }

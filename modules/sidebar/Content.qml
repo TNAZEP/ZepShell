@@ -20,8 +20,11 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            radius: Appearance.rounding.normal
-            color: Colours.tPalette.m3surfaceContainerLow
+            // Minimal flat styling with border
+            radius: Appearance.rounding.small
+            color: Colours.palette.m3surfaceContainerLow
+            border.width: 2
+            border.color: Colours.palette.m3outline
 
             NotifDock {
                 props: root.props
@@ -32,9 +35,10 @@ Item {
         StyledRect {
             Layout.topMargin: Appearance.padding.large - layout.spacing
             Layout.fillWidth: true
-            implicitHeight: 1
+            implicitHeight: 2
 
-            color: Colours.tPalette.m3outlineVariant
+            // Minimal flat divider
+            color: Colours.palette.m3outline
         }
     }
 }

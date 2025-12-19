@@ -8,7 +8,8 @@ import QtQuick
 Column {
     id: root
 
-    property color colour: Colours.palette.m3tertiary
+    // Use foreground color for clock - minimal style
+    property color colour: Colours.palette.m3onSurface
 
     spacing: Appearance.spacing.small
 
@@ -20,8 +21,8 @@ Column {
         asynchronous: true
 
         sourceComponent: MaterialIcon {
-            text: "calendar_month"
-            color: root.colour
+            text: "schedule"
+            color: Colours.palette.m3primary
         }
     }
 
@@ -31,7 +32,8 @@ Column {
         anchors.horizontalCenter: parent.horizontalCenter
 
         horizontalAlignment: StyledText.AlignHCenter
-        text: Time.format(Config.services.useTwelveHourClock ? "hh\nmm\nA" : "hh\nmm")
+        // Display time in lowercase like Waybar
+        text: Time.format(Config.services.useTwelveHourClock ? "hh\nmm\na" : "hh\nmm").toLowerCase()
         font.pointSize: Appearance.font.size.smaller
         font.family: Appearance.font.family.mono
         color: root.colour

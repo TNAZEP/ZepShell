@@ -47,8 +47,11 @@ Item {
     StyledRect {
         id: searchWrapper
 
-        color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        // Minimal flat styling with border
+        color: Colours.palette.m3surfaceContainer
+        radius: Appearance.rounding.small
+        border.width: 2
+        border.color: Colours.palette.m3outline
 
         anchors.left: parent.left
         anchors.right: parent.right
@@ -65,7 +68,7 @@ Item {
             anchors.leftMargin: root.padding
 
             text: "search"
-            color: Colours.palette.m3onSurfaceVariant
+            color: Colours.palette.m3primary
         }
 
         StyledTextField {

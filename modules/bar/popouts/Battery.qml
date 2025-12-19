@@ -48,8 +48,11 @@ Column {
             implicitWidth: child.implicitWidth + Appearance.padding.normal * 2
             implicitHeight: child.implicitHeight + Appearance.padding.smaller * 2
 
+            // Minimal flat error styling
             color: Colours.palette.m3error
-            radius: Appearance.rounding.normal
+            radius: Appearance.rounding.small
+            border.width: 2
+            border.color: Qt.darker(Colours.palette.m3error, 1.3)
 
             Column {
                 id: child
@@ -112,14 +115,17 @@ Column {
         implicitWidth: saver.implicitHeight + balance.implicitHeight + perf.implicitHeight + Appearance.padding.normal * 2 + Appearance.spacing.large * 2
         implicitHeight: Math.max(saver.implicitHeight, balance.implicitHeight, perf.implicitHeight) + Appearance.padding.small * 2
 
-        color: Colours.tPalette.m3surfaceContainer
-        radius: Appearance.rounding.full
+        // Minimal flat styling
+        color: Colours.palette.m3surfaceContainer
+        radius: Appearance.rounding.small
+        border.width: 2
+        border.color: Colours.palette.m3outline
 
         StyledRect {
             id: indicator
 
             color: Colours.palette.m3primary
-            radius: Appearance.rounding.full
+            radius: Appearance.rounding.small
             state: profiles.current
 
             states: [
@@ -205,7 +211,7 @@ Column {
         implicitHeight: icon.implicitHeight + Appearance.padding.small * 2
 
         StateLayer {
-            radius: Appearance.rounding.full
+            radius: Appearance.rounding.small
             color: profiles.current === parent.icon ? Colours.palette.m3onPrimary : Colours.palette.m3onSurface
 
             function onClicked(): void {

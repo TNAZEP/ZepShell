@@ -51,7 +51,8 @@ CustomMouseArea {
                 StateLayer {
                     id: prevMonthStateLayer
 
-                    radius: Appearance.rounding.full
+                    // Minimal flat styling
+                    radius: Appearance.rounding.small
 
                     function onClicked(): void {
                         root.state.currentDate = new Date(root.currYear, root.currMonth - 1, 1);
@@ -63,7 +64,7 @@ CustomMouseArea {
 
                     anchors.centerIn: parent
                     text: "chevron_left"
-                    color: Colours.palette.m3tertiary
+                    color: Colours.palette.m3primary
                     font.pointSize: Appearance.font.size.normal
                     font.weight: 700
                 }
@@ -81,7 +82,8 @@ CustomMouseArea {
                     anchors.leftMargin: -Appearance.padding.normal
                     anchors.rightMargin: -Appearance.padding.normal
 
-                    radius: Appearance.rounding.full
+                    // Minimal flat styling
+                    radius: Appearance.rounding.small
                     disabled: {
                         const now = new Date();
                         return root.currMonth === now.getMonth() && root.currYear === now.getFullYear();
@@ -111,7 +113,8 @@ CustomMouseArea {
                 StateLayer {
                     id: nextMonthStateLayer
 
-                    radius: Appearance.rounding.full
+                    // Minimal flat styling
+                    radius: Appearance.rounding.small
 
                     function onClicked(): void {
                         root.state.currentDate = new Date(root.currYear, root.currMonth + 1, 1);
@@ -123,7 +126,7 @@ CustomMouseArea {
 
                     anchors.centerIn: parent
                     text: "chevron_right"
-                    color: Colours.palette.m3tertiary
+                    color: Colours.palette.m3primary
                     font.pointSize: Appearance.font.size.normal
                     font.weight: 700
                 }
@@ -208,7 +211,8 @@ CustomMouseArea {
                 implicitHeight: today?.implicitHeight ?? 0
 
                 clip: true
-                radius: Appearance.rounding.full
+                // Minimal flat styling for today indicator
+                radius: Appearance.rounding.small
                 color: Colours.palette.m3primary
 
                 opacity: todayItem ? 1 : 0

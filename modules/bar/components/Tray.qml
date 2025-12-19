@@ -30,8 +30,11 @@ StyledRect {
     implicitWidth: Config.bar.sizes.innerWidth
     implicitHeight: nonAnimHeight
 
-    color: Qt.alpha(Colours.tPalette.m3surfaceContainer, Config.bar.tray.background ? Colours.tPalette.m3surfaceContainer.a : 0)
-    radius: Appearance.rounding.full
+    // Minimal flat styling
+    color: Qt.alpha(Colours.palette.m3surface, Config.bar.tray.background ? 1 : 0)
+    radius: Appearance.rounding.small
+    border.width: Config.bar.tray.background ? 2 : 0
+    border.color: Colours.palette.m3outline
 
     Column {
         id: layout

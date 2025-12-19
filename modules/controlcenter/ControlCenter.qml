@@ -58,7 +58,10 @@ Item {
             topLeftRadius: root.rounding
             bottomLeftRadius: root.rounding
             implicitWidth: navRail.implicitWidth
-            color: Colours.tPalette.m3surfaceContainer
+            // Minimal flat styling
+            color: Colours.palette.m3surfaceContainer
+            border.width: 2
+            border.color: Colours.palette.m3outline
 
             CustomMouseArea {
                 anchors.fill: parent
