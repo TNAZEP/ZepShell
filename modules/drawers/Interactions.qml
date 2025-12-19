@@ -13,40 +13,52 @@ CustomMouseArea {
     required property Panels panels
     required property Item bar
 
+    readonly property bool isHorizontalBar: Config.bar.position === "top"
+
     property point dragStart
     property bool dashboardShortcutActive
     property bool osdShortcutActive
     property bool utilitiesShortcutActive
 
     function withinPanelHeight(panel: Item, x: real, y: real): bool {
-        const panelY = Config.border.thickness + panel.y;
+        const panelY = isHorizontalBar ? bar.implicitHeight + panel.y : Config.border.thickness + panel.y;
         return y >= panelY - Config.border.rounding && y <= panelY + panel.height + Config.border.rounding;
     }
 
     function withinPanelWidth(panel: Item, x: real, y: real): bool {
-        const panelX = bar.implicitWidth + panel.x;
+        const panelX = isHorizontalBar ? panel.x : bar.implicitWidth + panel.x;
         return x >= panelX - Config.border.rounding && x <= panelX + panel.width + Config.border.rounding;
     }
 
     function inLeftPanel(panel: Item, x: real, y: real): bool {
-        return x < bar.implicitWidth + panel.x + panel.width && withinPanelHeight(panel, x, y);
+        const leftEdge = isHorizontalBar ? panel.x : bar.implicitWidth + panel.x;
+        return x < leftEdge + panel.width && withinPanelHeight(panel, x, y);
     }
 
     function inRightPanel(panel: Item, x: real, y: real): bool {
-        return x > bar.implicitWidth + panel.x && withinPanelHeight(panel, x, y);
+        const leftEdge = isHorizontalBar ? panel.x : bar.implicitWidth + panel.x;
+        return x > leftEdge && withinPanelHeight(panel, x, y);
     }
 
     function inTopPanel(panel: Item, x: real, y: real): bool {
-        return y < Config.border.thickness + panel.y + panel.height && withinPanelWidth(panel, x, y);
+        const topEdge = isHorizontalBar ? bar.implicitHeight + panel.y : Config.border.thickness + panel.y;
+        return y < topEdge + panel.height && withinPanelWidth(panel, x, y);
     }
 
     function inBottomPanel(panel: Item, x: real, y: real): bool {
-        return y > root.height - Config.border.thickness - panel.height - Config.border.rounding && withinPanelWidth(panel, x, y);
+        const bottomMargin = isHorizontalBar ? 0 : Config.border.thickness;
+        return y > root.height - bottomMargin - panel.height - Config.border.rounding && withinPanelWidth(panel, x, y);
     }
 
     function onWheel(event: WheelEvent): void {
-        if (event.x < bar.implicitWidth) {
-            bar.handleWheel(event.y, event.angleDelta);
+        if (isHorizontalBar) {
+            if (event.y < bar.implicitHeight) {
+                bar.handleWheel(event.x, event.angleDelta);
+            }
+        } else {
+            if (event.x < bar.implicitWidth) {
+                bar.handleWheel(event.y, event.angleDelta);
+            }
         }
     }
 
@@ -88,11 +100,16 @@ CustomMouseArea {
         const dragY = y - dragStart.y;
 
         // Show bar in non-exclusive mode on hover
-        if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth)
-            bar.isHovered = true;
+        if (isHorizontalBar) {
+            if (!visibilities.bar && Config.bar.showOnHover && y < bar.implicitHeight)
+                bar.isHovered = true;
+        } else {
+            if (!visibilities.bar && Config.bar.showOnHover && x < bar.implicitWidth)
+                bar.isHovered = true;
+        }
 
-        // Show/hide bar on drag
-        if (pressed && dragStart.x < bar.implicitWidth) {
+        // Show/hide bar on drag (only for vertical bar)
+        if (!isHorizontalBar && pressed && dragStart.x < bar.implicitWidth) {
             if (dragX > Config.bar.dragThreshold)
                 visibilities.bar = true;
             else if (dragX < -Config.bar.dragThreshold)
@@ -113,7 +130,8 @@ CustomMouseArea {
                 root.panels.osd.hovered = true;
             }
 
-            const showSidebar = pressed && dragStart.x > bar.implicitWidth + panels.sidebar.x;
+            const sidebarX = isHorizontalBar ? panels.sidebar.x : bar.implicitWidth + panels.sidebar.x;
+            const showSidebar = pressed && dragStart.x > sidebarX;
 
             // Show/hide session on drag
             if (pressed && inRightPanel(panels.session, dragStart.x, dragStart.y) && withinPanelHeight(panels.session, x, y)) {
@@ -199,11 +217,20 @@ CustomMouseArea {
         }
 
         // Show popouts on hover
-        if (x < bar.implicitWidth) {
-            bar.checkPopout(y);
-        } else if ((!popouts.currentName.startsWith("traymenu") || (popouts.current?.depth ?? 0) <= 1) && !inLeftPanel(panels.popouts, x, y)) {
-            popouts.hasCurrent = false;
-            bar.closeTray();
+        if (isHorizontalBar) {
+            if (y < bar.implicitHeight) {
+                bar.checkPopout(x);
+            } else if ((!popouts.currentName.startsWith("traymenu") || (popouts.current?.depth ?? 0) <= 1) && !inTopPanel(panels.popouts, x, y)) {
+                popouts.hasCurrent = false;
+                bar.closeTray();
+            }
+        } else {
+            if (x < bar.implicitWidth) {
+                bar.checkPopout(y);
+            } else if ((!popouts.currentName.startsWith("traymenu") || (popouts.current?.depth ?? 0) <= 1) && !inLeftPanel(panels.popouts, x, y)) {
+                popouts.hasCurrent = false;
+                bar.closeTray();
+            }
         }
     }
 

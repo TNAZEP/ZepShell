@@ -15,7 +15,8 @@ Item {
 
     required property ShellScreen screen
 
-    readonly property real nonAnimWidth: x > 0 || hasCurrent ? children.find(c => c.shouldBeActive)?.implicitWidth ?? content.implicitWidth : 0
+    readonly property bool isHorizontalBar: Config.bar.position === "top"
+    readonly property real nonAnimWidth: (isHorizontalBar ? (y > 0 || hasCurrent) : (x > 0 || hasCurrent)) ? children.find(c => c.shouldBeActive)?.implicitWidth ?? content.implicitWidth : 0
     readonly property real nonAnimHeight: children.find(c => c.shouldBeActive)?.implicitHeight ?? content.implicitHeight
     readonly property Item current: content.item?.current ?? null
 
@@ -76,8 +77,11 @@ Item {
 
         shouldBeActive: root.hasCurrent && !root.detachedMode
         asynchronous: true
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+        // Anchor based on bar position
+        anchors.right: root.isHorizontalBar ? undefined : parent.right
+        anchors.verticalCenter: root.isHorizontalBar ? undefined : parent.verticalCenter
+        anchors.bottom: root.isHorizontalBar ? parent.bottom : undefined
+        anchors.horizontalCenter: root.isHorizontalBar ? parent.horizontalCenter : undefined
 
         sourceComponent: Content {
             wrapper: root

@@ -19,6 +19,7 @@
   rubik,
   nerd-fonts,
   qt6,
+  kdePackages,
   quickshell,
   aubio,
   libcava,
@@ -111,7 +112,7 @@ in
     src = ./..;
 
     nativeBuildInputs = [cmake ninja makeWrapper qt6.wrapQtAppsHook];
-    buildInputs = [quickshell extras plugin xkeyboard-config qt6.qtbase];
+    buildInputs = [quickshell extras plugin xkeyboard-config qt6.qtbase kdePackages.kirigami];
     propagatedBuildInputs = runtimeDeps;
 
     cmakeFlags =

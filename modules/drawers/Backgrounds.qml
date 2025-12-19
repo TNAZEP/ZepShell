@@ -17,9 +17,13 @@ Shape {
     required property Panels panels
     required property Item bar
 
+    readonly property bool isHorizontalBar: Config.bar.position === "top"
+
     anchors.fill: parent
-    anchors.margins: Config.border.thickness
-    anchors.leftMargin: bar.implicitWidth
+    // Adjust margins based on bar position
+    anchors.margins: isHorizontalBar ? 0 : Config.border.thickness
+    anchors.leftMargin: isHorizontalBar ? 0 : bar.implicitWidth
+    anchors.topMargin: isHorizontalBar ? bar.implicitHeight : Config.border.thickness
     preferredRendererType: Shape.CurveRenderer
 
     Osd.Background {

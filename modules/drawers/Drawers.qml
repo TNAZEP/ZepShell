@@ -32,6 +32,7 @@ Variants {
             }
             return false;
         }
+        readonly property bool isHorizontalBar: Config.bar.position === "top"
 
         Exclusions {
             screen: scope.modelData
@@ -69,10 +70,11 @@ Variants {
             WlrLayershell.keyboardFocus: visibilities.launcher || visibilities.session ? WlrKeyboardFocus.OnDemand : WlrKeyboardFocus.None
 
             mask: Region {
-                x: bar.implicitWidth + win.dragMaskPadding
-                y: Config.border.thickness + win.dragMaskPadding
-                width: win.width - bar.implicitWidth - Config.border.thickness - win.dragMaskPadding * 2
-                height: win.height - Config.border.thickness * 2 - win.dragMaskPadding * 2
+                // Adjust mask based on bar position
+                x: scope.isHorizontalBar ? Config.border.thickness + win.dragMaskPadding : bar.implicitWidth + win.dragMaskPadding
+                y: scope.isHorizontalBar ? bar.implicitHeight + win.dragMaskPadding : Config.border.thickness + win.dragMaskPadding
+                width: win.width - (scope.isHorizontalBar ? Config.border.thickness * 2 : bar.implicitWidth + Config.border.thickness) - win.dragMaskPadding * 2
+                height: win.height - (scope.isHorizontalBar ? bar.implicitHeight + Config.border.thickness : Config.border.thickness * 2) - win.dragMaskPadding * 2
                 intersection: Intersection.Xor
 
                 regions: regions.instances
@@ -91,8 +93,8 @@ Variants {
                 Region {
                     required property Item modelData
 
-                    x: modelData.x + bar.implicitWidth
-                    y: modelData.y + Config.border.thickness
+                    x: scope.isHorizontalBar ? modelData.x + Config.border.thickness : modelData.x + bar.implicitWidth
+                    y: scope.isHorizontalBar ? modelData.y + bar.implicitHeight : modelData.y + Config.border.thickness
                     width: modelData.width
                     height: modelData.height
                     intersection: Intersection.Subtract
@@ -134,8 +136,13 @@ Variants {
                     shadowColor: Qt.alpha(Colours.palette.m3shadow, 0.7)
                 }
 
-                Border {
-                    bar: bar
+                // Only show border when bar is on the left (not top)
+                Loader {
+                    active: !scope.isHorizontalBar
+                    anchors.fill: parent
+                    sourceComponent: Border {
+                        bar: bar
+                    }
                 }
 
                 Backgrounds {
@@ -176,8 +183,11 @@ Variants {
                 BarWrapper {
                     id: bar
 
+                    // Position bar at top or left based on config
                     anchors.top: parent.top
-                    anchors.bottom: parent.bottom
+                    anchors.left: scope.isHorizontalBar ? parent.left : undefined
+                    anchors.right: scope.isHorizontalBar ? parent.right : undefined
+                    anchors.bottom: scope.isHorizontalBar ? undefined : parent.bottom
 
                     screen: scope.modelData
                     visibilities: visibilities

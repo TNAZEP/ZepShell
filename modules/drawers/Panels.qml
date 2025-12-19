@@ -28,9 +28,13 @@ Item {
     readonly property alias toasts: toasts
     readonly property alias sidebar: sidebar
 
+    readonly property bool isHorizontalBar: Config.bar.position === "top"
+
     anchors.fill: parent
-    anchors.margins: Config.border.thickness
-    anchors.leftMargin: bar.implicitWidth
+    // Adjust margins based on bar position
+    anchors.margins: isHorizontalBar ? 0 : Config.border.thickness
+    anchors.leftMargin: isHorizontalBar ? 0 : bar.implicitWidth
+    anchors.topMargin: isHorizontalBar ? bar.implicitHeight : Config.border.thickness
 
     Osd.Wrapper {
         id: osd
@@ -91,10 +95,29 @@ Item {
 
         screen: root.screen
 
-        x: isDetached ? (root.width - nonAnimWidth) / 2 : 0
+        x: {
+            if (isDetached)
+                return (root.width - nonAnimWidth) / 2;
+
+            // For horizontal bar, popouts appear below the bar at the currentCenter x position
+            if (root.isHorizontalBar) {
+                const off = currentCenter - nonAnimWidth / 2;
+                const diff = root.width - Math.floor(off + nonAnimWidth);
+                if (diff < 0)
+                    return off + diff;
+                return Math.max(off, 0);
+            }
+
+            return 0;
+        }
         y: {
             if (isDetached)
                 return (root.height - nonAnimHeight) / 2;
+
+            // For horizontal bar, popouts appear at the top (below bar)
+            if (root.isHorizontalBar) {
+                return 0;
+            }
 
             const off = currentCenter - Config.border.thickness - nonAnimHeight / 2;
             const diff = root.height - Math.floor(off + nonAnimHeight);
