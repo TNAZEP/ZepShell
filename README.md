@@ -1,4 +1,4 @@
-<h1 align=center>caelestia-shell</h1>
+<h1 align=center>ZepShell</h1>
 
 <div align=center>
 
@@ -17,6 +17,10 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 -   Window manager: [`Hyprland`](https://hyprland.org)
 -   Dots: [`caelestia`](https://github.com/caelestia-dots)
 
+> [!NOTE]
+> This repo is a fork of [`Caelestia Shell`](https://github.com/caelestia-dots/shell)
+> All credits for creation go to them, my form simply restyles the entire shell to fit my prefered look.
+
 ## Installation
 
 > [!NOTE]
@@ -29,19 +33,12 @@ https://github.com/user-attachments/assets/0840f496-575c-4ca6-83a8-87bb01a85c5f
 > If you want to make your own changes/tweaks to the shell do NOT edit the files installed by the AUR
 > package. Instead, follow the instructions in the [manual installation section](#manual-installation).
 
-The shell is available from the AUR as `caelestia-shell`. You can install it with an AUR helper
-like [`yay`](https://github.com/Jguer/yay) or manually downloading the PKGBUILD and running `makepkg -si`.
-
-A package following the latest commit also exists as `caelestia-shell-git`. This is bleeding edge
-and likely to be unstable/have bugs. Regular users are recommended to use the stable package
-(`caelestia-shell`).
-
 ### Nix
 
 You can run the shell directly via `nix run`:
 
 ```sh
-nix run github:caelestia-dots/shell
+nix run github:TNAZEP/ZepShell
 ```
 
 Or add it to your system configuration:
@@ -52,7 +49,7 @@ Or add it to your system configuration:
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     caelestia-shell = {
-      url = "github:caelestia-dots/shell";
+      url = "github:TNAZEP/ZepShell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -105,7 +102,7 @@ Then simply build and install using `cmake`.
 
 ```sh
 cd $XDG_CONFIG_HOME/quickshell
-git clone https://github.com/caelestia-dots/shell.git caelestia
+git clone https://github.com/TNAZEP/ZepShell.git caelestia
 
 cd caelestia
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/
